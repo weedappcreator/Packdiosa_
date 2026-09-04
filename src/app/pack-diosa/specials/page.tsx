@@ -1,61 +1,176 @@
 "use client";
 
+import { motion, useInView, useReducedMotion } from "motion/react";
+import { useRef } from "react";
 import Link from "next/link";
-import { useScrollReveal } from "../hooks";
-import { ProductCard } from "../components";
 
-const specials = [
-  { name: "Mix Pepe", price: 550, desc: "Mixed pepe variety lot — diverse merchandise across categories. A staple for market vendors who sell assorted goods and want variety in one purchase." },
-  { name: "Baby #2 (Gwo Bal)", price: 700, desc: "Large-bundle baby lot with maximum quantity per purchase. Same lot available on the Baby page. Listed here because it's one of our most requested specials." },
-  { name: "Zaza Special", price: 450, desc: "Zaza selection at a lower entry point than the full Zaza Container ($12,000). Good way to test the Zaza product line before committing to a full container." },
+function RevealOnScroll({
+  children,
+  delay = 0,
+  className = "",
+}: {
+  children: React.ReactNode;
+  delay?: number;
+  className?: string;
+}) {
+  const ref = useRef(null);
+  const isInView = useInView(ref, { once: true, margin: "-50px" });
+  const prefersReduced = useReducedMotion();
+  return (
+    <motion.div
+      ref={ref}
+      initial={prefersReduced ? {} : { opacity: 0, y: 30 }}
+      animate={isInView ? { opacity: 1, y: 0 } : {}}
+      transition={{
+        duration: 0.6,
+        delay,
+        type: "spring",
+        stiffness: 100,
+        damping: 20,
+      }}
+      className={className}
+    >
+      {children}
+    </motion.div>
+  );
+}
+
+const products = [
+  {
+    name: "Mix Pepe",
+    price: 550,
+    desc: "Mixed pepe variety lot — diverse merchandise across categories. A staple for market vendors.",
+  },
+  {
+    name: "Baby #2 (Gwo Bal)",
+    price: 700,
+    desc: "Large-bundle baby lot with maximum quantity per purchase. One of our most requested specials.",
+  },
+  {
+    name: "Zaza Special",
+    price: 450,
+    desc: "Zaza selection at a lower entry point than the full Zaza Container ($12,000). Test the line before committing.",
+  },
 ];
 
 export default function SpecialsPage() {
-  const hero = useScrollReveal();
+  const prefersReduced = useReducedMotion();
 
   return (
-    <div className="bg-white">
-      <section className="relative overflow-hidden bg-[#0f1a24]">
-        <div className="absolute inset-0"><img src="https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=1600&q=80" alt="" className="h-full w-full object-cover opacity-15" /></div>
-        <div ref={hero.ref} style={hero.style} className="relative mx-auto max-w-7xl px-6 py-20 sm:px-8 sm:py-28 lg:px-12">
-          <Link href="/pack-diosa" className="mb-6 inline-flex items-center gap-2 text-xs font-medium text-white/50 hover:text-white/80">
-            <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" /></svg>
-            Back to catalog
-          </Link>
-          <h1 className="mt-4 font-[family-name:var(--font-barlow)] text-4xl font-extrabold tracking-tight text-white sm:text-5xl">
-            Specials &mdash; Bal P&eacute;p&egrave;
-          </h1>
-          <p className="mt-4 max-w-lg text-lg text-white/50">
-            Mixed lots and special selections, $450 to $700. The variety packs.
-          </p>
+    <main className="min-h-screen bg-[#0f1a24]">
+      {/* Hero */}
+      <section className="relative min-h-[65vh] flex items-center justify-center overflow-hidden">
+        <div
+          className="absolute inset-0 bg-cover bg-center"
+          style={{
+            backgroundImage:
+              "url(https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=1600&q=80)",
+          }}
+        />
+        <div className="absolute inset-0 bg-[#0f1a24]/85" />
+        <div className="relative z-10 text-center px-6 max-w-4xl mx-auto">
+          <motion.div
+            initial={prefersReduced ? {} : { opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{
+              duration: 0.8,
+              type: "spring",
+              stiffness: 80,
+              damping: 20,
+            }}
+          >
+            <p className="text-[#c8aa6e] text-sm tracking-[0.3em] uppercase mb-4 font-semibold">
+              Limited Selection
+            </p>
+            <h1 className="text-5xl md:text-7xl font-bold text-white font-[family-name:var(--font-barlow)] mb-6">
+              Specials &mdash; Bal P&eacute;p&egrave;
+            </h1>
+            <p className="text-lg md:text-xl text-white/60 max-w-xl mx-auto">
+              Mixed lots and special selections, $450 to $700.
+            </p>
+          </motion.div>
+          <motion.div
+            initial={prefersReduced ? {} : { opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.8 }}
+            className="mt-8"
+          >
+            <Link
+              href="/pack-diosa"
+              className="text-[#c8aa6e] hover:text-[#d4ba82] transition-colors text-sm tracking-widest uppercase"
+            >
+              &larr; Back to All Categories
+            </Link>
+          </motion.div>
         </div>
       </section>
 
-      <section className="mx-auto max-w-7xl px-6 py-20 sm:px-8 lg:px-12">
-        <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
-          {specials.map((s, i) => (
-            <ProductCard key={s.name} delay={i * 100} className="group relative overflow-hidden rounded-2xl border border-gray-100 bg-white transition-all duration-300 hover:-translate-y-1.5 hover:shadow-2xl">
-              <div className="h-1.5 w-full bg-gradient-to-r from-[#c8aa6e] to-[#a08a55]" />
-              <div className="p-8">
-                <h3 className="font-[family-name:var(--font-barlow)] text-2xl font-bold text-[#1a2b3c]">{s.name}</h3>
-                <p className="mt-3 text-sm leading-relaxed text-gray-400">{s.desc}</p>
-                <p className="mt-5 font-[family-name:var(--font-barlow)] text-3xl font-extrabold text-[#1a2b3c]">${s.price}<span className="ml-1 text-sm font-medium text-gray-300">/lot</span></p>
-                <Link href="/pack-diosa/contact" className="mt-6 inline-flex w-full items-center justify-center rounded-lg bg-[#c8aa6e] px-5 py-3 text-xs font-bold uppercase tracking-wider text-[#0f1a24] transition-all duration-200 hover:bg-[#d4ba82] hover:shadow-lg">
-                  Inquire Now
-                </Link>
-              </div>
-            </ProductCard>
+      {/* Cards */}
+      <section className="max-w-6xl mx-auto px-6 py-24">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          {products.map((product, i) => (
+            <RevealOnScroll key={product.name} delay={i * 0.15}>
+              <motion.div
+                whileHover={
+                  prefersReduced
+                    ? {}
+                    : { y: -4, boxShadow: "0 20px 60px rgba(0,0,0,0.4)" }
+                }
+                transition={{ type: "spring", stiffness: 300, damping: 25 }}
+                className="bg-[#1a2b3c] rounded-2xl overflow-hidden border border-white/5 hover:border-[#c8aa6e]/30 transition-colors duration-300"
+              >
+                {/* Gold gradient bar */}
+                <div className="h-1.5 bg-gradient-to-r from-[#c8aa6e] via-[#d4ba82] to-[#c8aa6e]" />
+
+                <div className="p-8">
+                  <p className="text-4xl font-bold text-[#1a2b3c] font-[family-name:var(--font-barlow)] mb-1">
+                    <span className="text-white">${product.price}</span>
+                  </p>
+                  <p className="text-[#c8aa6e] text-xs tracking-widest uppercase font-semibold mb-6">
+                    per lot
+                  </p>
+
+                  <h3 className="text-2xl font-bold text-white font-[family-name:var(--font-barlow)] mb-4">
+                    {product.name}
+                  </h3>
+
+                  <p className="text-white/50 text-sm leading-relaxed mb-8">
+                    {product.desc}
+                  </p>
+
+                  <Link
+                    href="/pack-diosa/contact"
+                    className="inline-block w-full text-center py-3.5 rounded-lg bg-[#c8aa6e] hover:bg-[#d4ba82] text-white font-semibold text-sm tracking-wide uppercase transition-colors duration-300"
+                  >
+                    Inquire Now
+                  </Link>
+                </div>
+              </motion.div>
+            </RevealOnScroll>
           ))}
         </div>
+      </section>
 
-        <div className="mt-16 rounded-xl bg-[#1a2b3c] p-8 text-center text-white">
-          <h2 className="font-[family-name:var(--font-barlow)] text-2xl font-bold">Not sure which lot is right for you?</h2>
-          <p className="mt-2 text-sm text-white/40">Call or visit the warehouse. We&apos;ll walk you through what&apos;s in stock and help you pick the right mix for your customers.</p>
-          <Link href="/pack-diosa/contact" className="mt-6 inline-block rounded-lg bg-[#c8aa6e] px-8 py-3 text-xs font-bold uppercase tracking-wider text-[#0f1a24] hover:bg-[#d4ba82] hover:shadow-lg">
-            Contact Us
-          </Link>
+      {/* Bottom CTA */}
+      <section className="bg-[#1a2b3c] py-20">
+        <div className="max-w-3xl mx-auto text-center px-6">
+          <RevealOnScroll>
+            <h2 className="text-3xl md:text-4xl font-bold text-white font-[family-name:var(--font-barlow)] mb-4">
+              Not sure which lot is right for you?
+            </h2>
+            <p className="text-white/50 mb-10 max-w-lg mx-auto">
+              Our team can help you choose the right special based on your
+              market, budget, and resale goals.
+            </p>
+            <Link
+              href="/pack-diosa/contact"
+              className="inline-block bg-[#c8aa6e] hover:bg-[#d4ba82] text-white font-semibold py-4 px-14 rounded-lg transition-colors duration-300 tracking-wide uppercase text-sm"
+            >
+              Contact Us
+            </Link>
+          </RevealOnScroll>
         </div>
       </section>
-    </div>
+    </main>
   );
 }

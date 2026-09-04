@@ -1,73 +1,272 @@
 "use client";
 
+import { motion, useInView, useReducedMotion } from "motion/react";
+import { useRef } from "react";
 import Link from "next/link";
-import { useScrollReveal } from "../hooks";
-import { ProductCard } from "../components";
 
-const babyProducts = [
-  { name: "Baby Modern", price: 350, desc: "Current-season baby clothing, newborn to 24 months. Includes bodysuits, outfit sets, and seasonal pieces. Good variety for boutique-style display.", who: "Children's boutiques, baby store owners" },
-  { name: "Baby Light", price: 300, desc: "Lightweight baby clothing — breathable cotton and blends for warm climates or year-round basics. Everyday onesies, tees, and shorts.", who: "Market vendors, warm-climate retailers" },
-  { name: "Children Light", price: 300, desc: "Lightweight children's clothing for ages 2 through 10. Casual play-ready pieces, assorted sizes. Separate from baby sizing.", who: "Children's clothing retailers, flea market vendors" },
-  { name: "Baby #2 (Gwo Bal)", price: 700, subtitle: "Gwo Bal", desc: "Large bundle — highest quantity baby lot we carry. If you move volume and need to restock fast, this is the one. More items per dollar than any other baby option.", who: "High-volume resellers, established baby clothing vendors" },
+function RevealOnScroll({
+  children,
+  delay = 0,
+  className = "",
+}: {
+  children: React.ReactNode;
+  delay?: number;
+  className?: string;
+}) {
+  const ref = useRef(null);
+  const isInView = useInView(ref, { once: true, margin: "-50px" });
+  const prefersReduced = useReducedMotion();
+  return (
+    <motion.div
+      ref={ref}
+      initial={prefersReduced ? {} : { opacity: 0, y: 30 }}
+      animate={isInView ? { opacity: 1, y: 0 } : {}}
+      transition={{
+        duration: 0.6,
+        delay,
+        type: "spring",
+        stiffness: 100,
+        damping: 20,
+      }}
+      className={className}
+    >
+      {children}
+    </motion.div>
+  );
+}
+
+const products = [
+  {
+    name: "Baby Modern",
+    price: 350,
+    desc: "Current-season baby clothing, newborn to 24 months. Includes bodysuits, outfit sets, and seasonal pieces.",
+    who: "Children's boutiques, baby store owners",
+    image:
+      "https://images.unsplash.com/photo-1522771930-78848d9293e8?w=400&q=80",
+    premium: false,
+  },
+  {
+    name: "Baby Light",
+    price: 300,
+    desc: "Lightweight baby clothing — breathable cotton and blends for warm climates or year-round basics.",
+    who: "Market vendors, warm-climate retailers",
+    image:
+      "https://images.unsplash.com/photo-1519689680058-324335c77eba?w=400&q=80",
+    premium: false,
+  },
+  {
+    name: "Children Light",
+    price: 300,
+    desc: "Lightweight children's clothing for ages 2 through 10. Casual play-ready pieces, assorted sizes.",
+    who: "Children's clothing retailers, flea market vendors",
+    image:
+      "https://images.unsplash.com/photo-1503919545889-aef636e10ad4?w=400&q=80",
+    premium: false,
+  },
+  {
+    name: "Baby #2 (Gwo Bal)",
+    price: 700,
+    subtitle: "Gwo Bal",
+    desc: "Large bundle — highest quantity baby lot we carry. More items per dollar than any other baby option.",
+    who: "High-volume resellers, established baby clothing vendors",
+    image:
+      "https://images.unsplash.com/photo-1515488042361-ee00e0ddd4e4?w=400&q=80",
+    premium: true,
+  },
 ];
 
 export default function BabyPage() {
-  const hero = useScrollReveal();
+  const prefersReduced = useReducedMotion();
+  const headlineWords = ["Baby", "&", "Children"];
 
   return (
-    <div className="bg-white">
-      <section className="relative overflow-hidden bg-[#1a2b3c]">
-        <div className="absolute inset-0"><img src="https://images.unsplash.com/photo-1522771930-78848d9293e8?w=1600&q=80" alt="" className="h-full w-full object-cover opacity-20" /></div>
-        <div ref={hero.ref} style={hero.style} className="relative mx-auto max-w-7xl px-6 py-20 sm:px-8 sm:py-28 lg:px-12">
-          <Link href="/pack-diosa" className="mb-6 inline-flex items-center gap-2 text-xs font-medium text-white/50 hover:text-white/80">
-            <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" /></svg>
-            Back to catalog
-          </Link>
-          <h1 className="font-[family-name:var(--font-barlow)] text-4xl font-extrabold tracking-tight text-white sm:text-5xl">Baby &amp; Children</h1>
-          <p className="mt-4 max-w-lg text-lg text-white/50">4 lot options from $300 to $700. Newborn through age 10, sorted by type.</p>
+    <main className="min-h-screen bg-[#faf9f7]">
+      {/* Hero */}
+      <section className="relative min-h-[70vh] flex items-center justify-center overflow-hidden">
+        <div
+          className="absolute inset-0 bg-cover bg-center"
+          style={{
+            backgroundImage:
+              "url(https://images.unsplash.com/photo-1522771930-78848d9293e8?w=1600&q=80)",
+          }}
+        />
+        <div className="absolute inset-0 bg-gradient-to-b from-[#1a2b3c]/80 via-[#1a2b3c]/70 to-[#0f1a24]/90" />
+        <div className="relative z-10 text-center px-6 max-w-4xl mx-auto">
+          <div className="flex items-center justify-center gap-4 mb-6">
+            {headlineWords.map((word, i) => (
+              <motion.span
+                key={word}
+                initial={prefersReduced ? {} : { opacity: 0, y: 40 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{
+                  duration: 0.7,
+                  delay: 0.2 + i * 0.15,
+                  type: "spring",
+                  stiffness: 80,
+                  damping: 18,
+                }}
+                className="text-5xl md:text-7xl font-bold text-white font-[family-name:var(--font-barlow)]"
+              >
+                {word}
+              </motion.span>
+            ))}
+          </div>
+          <motion.p
+            initial={prefersReduced ? {} : { opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.7 }}
+            className="text-lg md:text-xl text-[#faf9f7]/80 max-w-2xl mx-auto"
+          >
+            4 lot options from $300 to $700. Newborn through age 10.
+          </motion.p>
+          <motion.div
+            initial={prefersReduced ? {} : { opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 1 }}
+            className="mt-8"
+          >
+            <Link
+              href="/pack-diosa"
+              className="text-[#c8aa6e] hover:text-[#d4ba82] transition-colors text-sm tracking-widest uppercase"
+            >
+              &larr; Back to All Categories
+            </Link>
+          </motion.div>
         </div>
       </section>
 
-      <section className="mx-auto max-w-7xl px-6 py-20 sm:px-8 lg:px-12">
-        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
-          {babyProducts.map((p, i) => (
-            <ProductCard key={p.name} delay={i * 100} className="group relative overflow-hidden rounded-2xl border border-gray-100 bg-white transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl">
-              <div className={`h-1.5 w-full ${p.subtitle ? "bg-gradient-to-r from-[#c8aa6e] to-[#a08a55]" : "bg-gradient-to-r from-[#1a2b3c] to-[#2d4a63]"}`} />
-              <div className="p-7">
-                <div className="flex items-start justify-between">
-                  <div>
-                    <h3 className="font-[family-name:var(--font-barlow)] text-xl font-bold text-[#1a2b3c]">{p.name}</h3>
-                    {p.subtitle && (
-                      <span className="mt-1 inline-block rounded-md bg-[#c8aa6e]/10 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-[#c8aa6e]">{p.subtitle}</span>
-                    )}
-                  </div>
-                  <p className="font-[family-name:var(--font-barlow)] text-2xl font-extrabold text-[#1a2b3c]">${p.price}<span className="ml-1 text-sm font-medium text-gray-300">/lot</span></p>
+      {/* Product Grid */}
+      <section className="max-w-6xl mx-auto px-6 py-20">
+        <RevealOnScroll>
+          <h2 className="text-3xl md:text-4xl font-bold text-[#1a2b3c] font-[family-name:var(--font-barlow)] text-center mb-4">
+            Available Lots
+          </h2>
+          <p className="text-[#1a2b3c]/60 text-center mb-14 max-w-xl mx-auto">
+            Choose from four carefully curated baby and children clothing lots
+          </p>
+        </RevealOnScroll>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          {products.map((product, i) => (
+            <RevealOnScroll key={product.name} delay={i * 0.12}>
+              <motion.div
+                whileHover={prefersReduced ? {} : { scale: 1.02 }}
+                transition={{ type: "spring", stiffness: 300, damping: 25 }}
+                className={`group rounded-2xl overflow-hidden bg-white shadow-sm hover:shadow-xl transition-shadow duration-300 ${
+                  product.premium
+                    ? "ring-2 ring-[#c8aa6e] shadow-[0_0_30px_rgba(200,170,110,0.15)]"
+                    : "border border-[#1a2b3c]/10"
+                }`}
+              >
+                {/* Image section */}
+                <div className="relative h-52 overflow-hidden">
+                  <img
+                    src={product.image}
+                    alt={product.name}
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                  />
+                  {product.premium && (
+                    <div className="absolute top-4 right-4 bg-[#c8aa6e] text-white text-xs font-bold tracking-widest uppercase px-3 py-1.5 rounded-full">
+                      Premium
+                    </div>
+                  )}
+                  <div className="absolute bottom-0 inset-x-0 h-20 bg-gradient-to-t from-white to-transparent" />
                 </div>
-                <p className="mt-3 text-sm leading-relaxed text-gray-400">{p.desc}</p>
-                <p className="mt-3 rounded-lg bg-gray-50 px-3 py-2 text-xs text-gray-500">
-                  <span className="font-semibold text-[#c8aa6e]">Best for:</span> {p.who}
-                </p>
-                <Link href="/pack-diosa/contact" className="mt-5 inline-flex w-full items-center justify-center rounded-lg bg-[#c8aa6e]/10 px-4 py-2.5 text-xs font-bold uppercase tracking-wider text-[#c8aa6e] transition-all duration-200 hover:bg-[#c8aa6e] hover:text-[#0f1a24]">
-                  Inquire Now
-                </Link>
-              </div>
-            </ProductCard>
+
+                {/* Content */}
+                <div className="p-6 pt-2">
+                  <div className="flex items-start justify-between mb-3">
+                    <div>
+                      <h3 className="text-xl font-bold text-[#1a2b3c] font-[family-name:var(--font-barlow)]">
+                        {product.name}
+                      </h3>
+                      {product.subtitle && (
+                        <span className="text-[#c8aa6e] text-sm font-medium">
+                          {product.subtitle}
+                        </span>
+                      )}
+                    </div>
+                    <span className="text-2xl font-bold text-[#1a2b3c]">
+                      ${product.price}
+                    </span>
+                  </div>
+                  <p className="text-[#1a2b3c]/70 text-sm leading-relaxed mb-4">
+                    {product.desc}
+                  </p>
+                  <p className="text-xs text-[#1a2b3c]/50 mb-5">
+                    <span className="font-semibold text-[#c8aa6e]">
+                      Best for:
+                    </span>{" "}
+                    {product.who}
+                  </p>
+                  <Link
+                    href="/pack-diosa/contact"
+                    className={`inline-block w-full text-center py-3 rounded-lg text-sm font-semibold tracking-wide uppercase transition-all duration-300 ${
+                      product.premium
+                        ? "bg-[#c8aa6e] text-white hover:bg-[#d4ba82]"
+                        : "bg-[#1a2b3c] text-white hover:bg-[#1a2b3c]/90"
+                    }`}
+                  >
+                    Inquire Now
+                  </Link>
+                </div>
+              </motion.div>
+            </RevealOnScroll>
           ))}
         </div>
+      </section>
 
-        <div className="mt-14 grid grid-cols-2 gap-4">
-          <div className="rounded-xl border border-gray-100 p-5">
-            <p className="text-[10px] font-bold uppercase tracking-widest text-[#1a2b3c]">Standard Lots</p>
-            <p className="mt-1 font-[family-name:var(--font-barlow)] text-xl font-bold text-[#1a2b3c]">$300 – $350</p>
-            <p className="mt-1 text-xs text-gray-400">Baby Modern, Baby Light, Children Light</p>
-          </div>
-          <div className="rounded-xl border border-gray-100 p-5">
-            <p className="text-[10px] font-bold uppercase tracking-widest text-[#c8aa6e]">Large Bundle</p>
-            <p className="mt-1 font-[family-name:var(--font-barlow)] text-xl font-bold text-[#1a2b3c]">$700</p>
-            <p className="mt-1 text-xs text-gray-400">Baby #2 (Gwo Bal) — max quantity per dollar</p>
-          </div>
+      {/* Summary */}
+      <section className="max-w-4xl mx-auto px-6 pb-20">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <RevealOnScroll delay={0}>
+            <div className="bg-[#1a2b3c] rounded-2xl p-8 text-center">
+              <p className="text-[#c8aa6e] text-sm tracking-widest uppercase font-semibold mb-2">
+                Standard Lots
+              </p>
+              <p className="text-4xl font-bold text-white font-[family-name:var(--font-barlow)] mb-2">
+                $300 &ndash; $350
+              </p>
+              <p className="text-white/60 text-sm">
+                3 options for baby and children clothing
+              </p>
+            </div>
+          </RevealOnScroll>
+          <RevealOnScroll delay={0.1}>
+            <div className="bg-gradient-to-br from-[#c8aa6e]/20 to-[#c8aa6e]/5 border-2 border-[#c8aa6e] rounded-2xl p-8 text-center">
+              <p className="text-[#c8aa6e] text-sm tracking-widest uppercase font-semibold mb-2">
+                Large Bundle
+              </p>
+              <p className="text-4xl font-bold text-[#1a2b3c] font-[family-name:var(--font-barlow)] mb-2">
+                $700
+              </p>
+              <p className="text-[#1a2b3c]/60 text-sm">
+                Baby #2 Gwo Bal — maximum quantity per dollar
+              </p>
+            </div>
+          </RevealOnScroll>
         </div>
       </section>
-    </div>
+
+      {/* CTA */}
+      <section className="bg-[#1a2b3c] py-16">
+        <div className="max-w-3xl mx-auto text-center px-6">
+          <RevealOnScroll>
+            <h2 className="text-3xl font-bold text-white font-[family-name:var(--font-barlow)] mb-4">
+              Ready to Order?
+            </h2>
+            <p className="text-white/60 mb-8">
+              Contact us to place an order or ask about current availability.
+            </p>
+            <Link
+              href="/pack-diosa/contact"
+              className="inline-block bg-[#c8aa6e] hover:bg-[#d4ba82] text-white font-semibold py-3 px-10 rounded-lg transition-colors duration-300 tracking-wide uppercase text-sm"
+            >
+              Contact Us
+            </Link>
+          </RevealOnScroll>
+        </div>
+      </section>
+    </main>
   );
 }
