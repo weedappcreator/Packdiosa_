@@ -1,111 +1,84 @@
-/**
- * Pack-DIOSA Men's Collection Page
- * Men's items and outlet
- */
-
 "use client";
 
-import { UseRevealOptions, useReveal, ScrollReveal } from "@/lib/ruflo-domains";
-import { Inter, Barlow_Condensed } from "next/font/google";
-import Image from "next/image";
 import Link from "next/link";
-import { cn } from "@/lib/utils";
-import { ScrollReveal as SR } from "@/lib/ruflo-domains";
+import { useEffect, useRef, useState } from "react";
 
-const inter = Inter({
-  variable: "--font-inter",
-  subsets: ["latin"],
-});
+function useScrollReveal(delay = 0) {
+  const ref = useRef<HTMLDivElement>(null);
+  const [vis, setVis] = useState(false);
+  useEffect(() => {
+    if (!ref.current) return;
+    const obs = new IntersectionObserver(([e]) => { if (e.isIntersecting) setVis(true); }, { threshold: 0.1, rootMargin: "0px 0px -40px 0px" });
+    obs.observe(ref.current);
+    return () => obs.disconnect();
+  }, []);
+  return { ref, style: { opacity: vis ? 1 : 0, transform: vis ? "translateY(0)" : "translateY(28px)", transition: `all 0.6s ease-out ${delay}ms` } };
+}
 
-const barlow = Barlow_Condensed({
-  variable: "--font-display",
-  weight: ["400", "600", "700", "800"],
-  subsets: ["latin"],
-});
-
-export const metadata = {
-  title: "Pack-DIOSA - Men's Collection",
-  description:
-    "Men's inventory from Pack-DIOSA LLC: T-shirts $250, Mix brands outlet $450.",
-};
-
-const menItems = [
-  { id: "1", name: "Men T-Shirt", price: 250, category: "t-shirts", description: "Classic men's t-shirt", image: "/placeholder.svg?height=400&width=600" },
-  { id: "2", name: "Mix Brands Outlet", price: 450, category: "outlet", description: "Mix brands outlet selection", image: "/placeholder.svg?height=400&width=600" },
+const menProducts = [
+  { name: "Men T-Shirt", price: 250, desc: "Mixed styles men's t-shirts. Casual and streetwear options with brand variety. Great for retail resale.", features: ["Mixed brands", "Casual & streetwear", "Assorted sizes", "High turnover item"] },
+  { name: "Mix Brands Outlet", price: 450, desc: "Brand-name outlet mix — premium quality men's clothing from recognized brands. Higher margins for resellers.", features: ["Brand-name items", "Outlet quality", "Premium selection", "Higher resale value"] },
 ];
 
 export default function MenPage() {
+  const hero = useScrollReveal();
+
   return (
-    <div className={`${inter.variable} ${barlow.variable} antialiased bg-background text-foreground`}>
-      <SR variant="fade-up" stagger={100} className="max-w-7xl mx-auto px-4 py-12">
-        <header className="mb-8 animate-fade-in">
-          <nav className="flex items-center justify-between">
-            <Link
-              href="/"
-              className="text-xl font-display font-bold tracking-tighter"
-            >
-              <span className="text-emerald-400">Nova</span> Cargo
-            </Link>
-            <div className="flex items-center gap-4">
-              <Link href="/" className="text-zinc-400 hover:text-white transition-colors">
-                Home
-              </Link>
-              <Link href="/contact" className="text-zinc-400 hover:text-white transition-colors">
-                Contact
-              </Link>
-            </div>
-          </nav>
-        </header>
-
-        <section className="mb-20">
-          <h1 className="text-4xl font-display font-bold mb-4">
-            Men's Collection
-          </h1>
-          <p className="text-zinc-400 mb-8">
-            Men's inventory with quality selections and outlet deals.
-          </p>
-        </section>
-
-        <section className="mb-20 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {menItems.map((item) => (
-            <div
-              key={item.id}
-              className="group bg-zinc-900/80 backdrop-blur-lg border border-zinc-800/50 rounded-xl p-6 hover:border-emerald-500/30 transition-colors cursor-pointer"
-            >
-              {item.image && (
-                <Image
-                  src={item.image}
-                  alt={item.name}
-                  className="h-48 w-full object-cover rounded-t-xl mb-5"
-                )
-              }
-              <h3 className="text-lg font-display font-bold mb-2">{item.name}</h3>
-              <p className="text-zinc-400 text-sm mb-4">{item.description}</p>
-              <div className="flex items-baseline gap-2">
-                <span className="text-emerald-400 font-display font-bold text-2xl">
-                  ${item.price}
-                </span>
-              </div>
-              <Link
-                href="/contact"
-                className="mt-3 w-full bg-emerald-600/10 text-emerald-400 hover:bg-emerald-600/20 transition-colors rounded-lg px-4 py-2 text-sm"
-              >
-                Inquire Now
-              </Link>
-            </div>
-          ))}
-        </section>
-
-        <div className="mt-20 pt-12 border-t border-zinc-800/20">
-          <h3 className="text-xl font-display font-bold mb-4">Men's Price Point</h3>
-          <p className="text-zinc-500 text-4xl font-display font-bold">
-            T-shirts $250 · Outlet $450
-          </p>
-          <p className="text-zinc-400 text-sm mt-2">
-            Quality menswear at accessible prices for everyday wear.
-          </p>
+    <div className="bg-white">
+      <section className="relative overflow-hidden bg-gradient-to-br from-[#0066CC] via-[#004d99] to-[#002d5a]">
+        <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.04)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.04)_1px,transparent_1px)] bg-[size:48px_48px]" />
+        <div ref={hero.ref} style={hero.style} className="relative mx-auto max-w-7xl px-6 py-20 sm:px-8 sm:py-28 lg:px-12">
+          <Link href="/pack-diosa" className="mb-6 inline-flex items-center gap-2 text-xs font-medium text-white/50 transition-colors hover:text-white/80">
+            <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" /></svg>
+            Back to catalog
+          </Link>
+          <h1 className="font-[family-name:var(--font-barlow)] text-4xl font-extrabold tracking-tight text-white sm:text-5xl">Men&apos;s Collection</h1>
+          <p className="mt-4 max-w-lg text-lg text-blue-100/60">T-shirts and brand outlet mix — from $250 to $450.</p>
+          <div className="mt-8 flex flex-wrap gap-3">
+            <span className="rounded-full bg-white/10 px-4 py-1.5 text-xs font-medium text-white/80">2 Options</span>
+            <span className="rounded-full bg-white/10 px-4 py-1.5 text-xs font-medium text-white/80">$250 – $450</span>
+          </div>
         </div>
-      </SR>
+      </section>
+
+      <section className="mx-auto max-w-7xl px-6 py-20 sm:px-8 lg:px-12">
+        <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+          {menProducts.map((p, i) => {
+            const reveal = useScrollReveal(i * 120);
+            return (
+              <div key={p.name} ref={reveal.ref} style={reveal.style} className="group relative overflow-hidden rounded-2xl border border-gray-100 bg-white transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl hover:shadow-blue-500/5">
+                <div className="h-1.5 w-full bg-gradient-to-r from-[#0066CC] to-[#7B5FFF]" />
+                <div className="p-8">
+                  <div className="flex items-start justify-between">
+                    <h3 className="font-[family-name:var(--font-barlow)] text-2xl font-bold text-[#1A1A1A]">{p.name}</h3>
+                    <p className="font-[family-name:var(--font-barlow)] text-3xl font-extrabold text-[#0066CC]">${p.price}</p>
+                  </div>
+                  <p className="mt-4 text-sm leading-relaxed text-gray-400">{p.desc}</p>
+                  <div className="mt-6">
+                    <p className="mb-2 text-[10px] font-bold uppercase tracking-widest text-gray-300">Includes</p>
+                    <div className="grid grid-cols-2 gap-2">
+                      {p.features.map((f) => (
+                        <span key={f} className="flex items-center gap-1.5 text-xs text-gray-500">
+                          <span className="h-1 w-1 rounded-full bg-[#0066CC]" />{f}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                  <Link href="/pack-diosa/contact" className="mt-6 inline-block rounded-lg bg-[#FF6B35] px-6 py-3 text-xs font-bold uppercase tracking-wider text-white transition-all duration-200 hover:bg-[#e55a2a] hover:shadow-md hover:shadow-orange-500/20">
+                    Inquire Now
+                  </Link>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+
+        <div className="mt-14 rounded-xl border border-[#0066CC]/10 bg-[#0066CC]/5 p-6 text-center">
+          <p className="font-[family-name:var(--font-barlow)] text-sm font-bold uppercase tracking-wider text-[#0066CC]">Need bulk ordering?</p>
+          <p className="mt-2 text-sm text-gray-400">Contact us for volume discounts and custom selections.</p>
+          <Link href="/pack-diosa/contact" className="mt-4 inline-block text-sm font-semibold text-[#FF6B35] transition-colors hover:text-[#e55a2a]">Get a Quote →</Link>
+        </div>
+      </section>
     </div>
   );
 }
