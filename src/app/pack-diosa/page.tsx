@@ -1,10 +1,10 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
-import { RevealSection, StatItem, SpotlightCard, CategoryImage } from "./components";
+import { motion, useReducedMotion } from "motion/react";
+import { RevealSection, StatItem, SpotlightCard, CategoryImage, HeroParallax, SplitText, MagneticButton } from "./components";
 
-/* ─── Pack-DIOSA Home — Wholesale Distribution ─── */
+/* --- Data --- */
 
 const featuredCategories = [
   {
@@ -88,125 +88,98 @@ const allProducts = [
 ];
 
 export default function PackDiosaPage() {
-  const [heroLoaded, setHeroLoaded] = useState(false);
-  useEffect(() => { setHeroLoaded(true); }, []);
+  const prefersReduced = useReducedMotion();
 
   return (
     <div className="bg-white">
-      {/* ═══════════ HERO ═══════════ */}
-      <section className="relative min-h-[90vh] overflow-hidden bg-[#0f1a24]">
-        <div className="absolute inset-0">
-          <img
-            src="https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?w=1600&q=80"
-            alt=""
-            className="h-full w-full object-cover opacity-20"
-          />
-          <div className="absolute inset-0 bg-gradient-to-r from-[#0f1a24] via-[#0f1a24]/90 to-[#0f1a24]/70" />
-        </div>
-
-        <div className="relative mx-auto flex max-w-7xl items-center px-6 py-32 sm:px-8 lg:min-h-[90vh] lg:px-12">
+      {/* HERO */}
+      <HeroParallax
+        src="https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?w=1600&q=80"
+        className="min-h-[90vh]"
+      >
+        <div className="mx-auto flex max-w-7xl items-center px-6 py-32 sm:px-8 lg:min-h-[90vh] lg:px-12">
           <div className="max-w-3xl">
-            <div
-              className="mb-6 inline-flex items-center gap-2 rounded-full border border-[#c8aa6e]/20 bg-[#c8aa6e]/5 px-4 py-1.5 text-xs font-medium tracking-widest text-[#c8aa6e] transition-all duration-700"
-              style={{ opacity: heroLoaded ? 1 : 0, transform: heroLoaded ? "translateY(0)" : "translateY(16px)" }}
+            <motion.div
+              className="mb-6 inline-flex items-center gap-2 rounded-full border border-[#c8aa6e]/20 bg-[#c8aa6e]/5 px-4 py-1.5 text-xs font-medium tracking-widest text-[#c8aa6e]"
+              initial={prefersReduced ? {} : { opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.1, type: "spring", stiffness: 100 }}
             >
               <span className="h-1.5 w-1.5 rounded-full bg-[#c8aa6e]" />
               NOVA CARGO — JESUP, GEORGIA
-            </div>
+            </motion.div>
 
             <h1 className="font-[family-name:var(--font-barlow)] text-[clamp(2.5rem,6vw,5rem)] font-extrabold leading-[1.05] tracking-tight text-white">
-              {["Wholesale", "Containers,"].map((word, i) => (
-                <span
-                  key={word}
-                  className="mr-[0.25em] inline-block transition-all duration-700 ease-out"
-                  style={{
-                    opacity: heroLoaded ? 1 : 0,
-                    transform: heroLoaded ? "translateY(0)" : "translateY(40px)",
-                    transitionDelay: `${200 + i * 120}ms`,
-                  }}
-                >
-                  {word}
-                </span>
-              ))}
+              <SplitText text="Wholesale Containers," delay={0.2} />
               <br />
-              {["Pallets", "&", "Apparel"].map((word, i) => (
-                <span
-                  key={word}
-                  className="mr-[0.25em] inline-block text-[#c8aa6e] transition-all duration-700 ease-out"
-                  style={{
-                    opacity: heroLoaded ? 1 : 0,
-                    transform: heroLoaded ? "translateY(0)" : "translateY(40px)",
-                    transitionDelay: `${560 + i * 120}ms`,
-                  }}
-                >
-                  {word}
-                </span>
-              ))}
+              <SplitText text="Pallets & Apparel" delay={0.5} gold />
             </h1>
 
-            <p
-              className="mt-6 max-w-lg text-lg leading-relaxed text-white/50 transition-all duration-700"
-              style={{
-                opacity: heroLoaded ? 1 : 0,
-                transform: heroLoaded ? "translateY(0)" : "translateY(24px)",
-                transitionDelay: "800ms",
-              }}
+            <motion.p
+              className="mt-6 max-w-lg text-lg leading-relaxed text-white/50"
+              initial={prefersReduced ? {} : { opacity: 0, y: 24 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.8, duration: 0.6, type: "spring", stiffness: 80 }}
             >
               Walk-in warehouse off I-95. No middleman pricing on 25+ categories
-              from $150 to $18,500. Open Tue–Fri, 9AM–5PM.
-            </p>
+              from $150 to $18,500. Open Tue-Fri, 9AM-5PM.
+            </motion.p>
 
-            <div
-              className="mt-10 flex flex-wrap gap-4 transition-all duration-700"
-              style={{
-                opacity: heroLoaded ? 1 : 0,
-                transform: heroLoaded ? "translateY(0)" : "translateY(24px)",
-                transitionDelay: "1000ms",
-              }}
+            <motion.div
+              className="mt-10 flex flex-wrap gap-4"
+              initial={prefersReduced ? {} : { opacity: 0, y: 24 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 1, duration: 0.6, type: "spring", stiffness: 80 }}
             >
-              <Link
+              <MagneticButton
                 href="#categories"
                 className="group relative overflow-hidden rounded-lg bg-[#c8aa6e] px-8 py-3.5 font-[family-name:var(--font-barlow)] text-sm font-bold uppercase tracking-wider text-[#0f1a24] transition-all duration-300 hover:shadow-lg hover:shadow-[#c8aa6e]/25"
               >
                 <span className="relative z-10">Browse Catalog</span>
                 <div className="absolute inset-0 -translate-x-full bg-[#d4ba82] transition-transform duration-300 group-hover:translate-x-0" />
-              </Link>
-              <Link
+              </MagneticButton>
+              <MagneticButton
                 href="/pack-diosa/contact"
                 className="rounded-lg border border-white/20 px-8 py-3.5 font-[family-name:var(--font-barlow)] text-sm font-bold uppercase tracking-wider text-white transition-all duration-300 hover:border-white/50 hover:bg-white/5"
               >
                 Get a Quote
-              </Link>
-            </div>
+              </MagneticButton>
+            </motion.div>
 
-            <div
-              className="mt-14 flex flex-wrap gap-4 transition-all duration-700"
-              style={{ opacity: heroLoaded ? 1 : 0, transitionDelay: "1200ms" }}
+            <motion.div
+              className="mt-14 flex flex-wrap gap-4"
+              initial={prefersReduced ? {} : { opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 1.2 }}
             >
               {[
-                { text: "Walk-In Welcome" },
-                { text: "No Middleman" },
-                { text: "Inspect Before You Buy" },
-                { text: "Tue–Fri 9AM–5PM" },
+                "Walk-In Welcome",
+                "No Middleman",
+                "Inspect Before You Buy",
+                "Tue-Fri 9AM-5PM",
               ].map((pill) => (
-                <span key={pill.text} className="flex items-center gap-2 text-xs text-white/40">
+                <span key={pill} className="flex items-center gap-2 text-xs text-white/40">
                   <span className="h-1.5 w-1.5 rounded-full bg-[#c8aa6e]/60" />
-                  {pill.text}
+                  {pill}
                 </span>
               ))}
-            </div>
+            </motion.div>
           </div>
         </div>
 
         <div className="absolute bottom-8 left-1/2 -translate-x-1/2">
-          <div className="flex flex-col items-center gap-2 text-white/20">
+          <motion.div
+            className="flex flex-col items-center gap-2 text-white/20"
+            animate={prefersReduced ? {} : { y: [0, 6, 0] }}
+            transition={{ repeat: Infinity, duration: 2, ease: "easeInOut" }}
+          >
             <span className="text-[10px] uppercase tracking-[0.3em]">Scroll</span>
-            <div className="h-8 w-[1px] bg-gradient-to-b from-white/20 to-transparent animate-pulse" />
-          </div>
+            <div className="h-8 w-[1px] bg-gradient-to-b from-white/20 to-transparent" />
+          </motion.div>
         </div>
-      </section>
+      </HeroParallax>
 
-      {/* ═══════════ STATS BAR ═══════════ */}
+      {/* STATS BAR */}
       <section className="border-b border-gray-100 bg-white">
         <div className="mx-auto grid max-w-7xl grid-cols-3 divide-x divide-gray-100">
           {stats.map((stat) => (
@@ -215,7 +188,7 @@ export default function PackDiosaPage() {
         </div>
       </section>
 
-      {/* ═══════════ FEATURED CATEGORIES ═══════════ */}
+      {/* FEATURED CATEGORIES */}
       <section id="categories" className="mx-auto max-w-7xl px-6 py-24 sm:px-8 lg:px-12">
         <RevealSection>
           <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#c8aa6e]">
@@ -246,7 +219,7 @@ export default function PackDiosaPage() {
                     <p className="mt-auto pt-4 font-[family-name:var(--font-barlow)] text-xl font-bold text-[#1a2b3c]">{cat.price}</p>
                     <span className="mt-3 inline-flex items-center gap-1.5 text-sm font-medium text-[#c8aa6e]">
                       View catalog
-                      <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                      <svg className="h-3.5 w-3.5 transition-transform duration-200 group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
                         <path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
                       </svg>
                     </span>
@@ -258,7 +231,7 @@ export default function PackDiosaPage() {
         </div>
       </section>
 
-      {/* ═══════════ WHY PACK-DIOSA ═══════════ */}
+      {/* WHY PACK-DIOSA */}
       <section className="bg-[#faf9f7]">
         <div className="mx-auto max-w-7xl px-6 py-24 sm:px-8 lg:px-12">
           <RevealSection className="text-center">
@@ -299,20 +272,20 @@ export default function PackDiosaPage() {
               },
             ].map((item, i) => (
               <RevealSection key={item.title} delay={i * 100}>
-                <div className="group h-full rounded-2xl border border-gray-100 bg-white p-8 transition-all duration-300 hover:border-gray-200 hover:shadow-xl hover:shadow-gray-100">
+                <SpotlightCard className="h-full p-8">
                   <div className="mb-5 inline-flex rounded-xl bg-[#c8aa6e]/10 p-3 text-[#c8aa6e]">
                     {item.icon}
                   </div>
                   <h3 className="font-[family-name:var(--font-barlow)] text-lg font-bold text-[#1a2b3c]">{item.title}</h3>
                   <p className="mt-3 text-sm leading-relaxed text-gray-400">{item.desc}</p>
-                </div>
+                </SpotlightCard>
               </RevealSection>
             ))}
           </div>
         </div>
       </section>
 
-      {/* ═══════════ COMPLETE CATALOG ═══════════ */}
+      {/* COMPLETE CATALOG */}
       <section className="mx-auto max-w-7xl px-6 py-24 sm:px-8 lg:px-12">
         <RevealSection>
           <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#c8aa6e]">Full Inventory</p>
@@ -336,10 +309,15 @@ export default function PackDiosaPage() {
                   const name = parts ? parts[1].trim() : item;
                   const price = parts ? parts[2] : "";
                   return (
-                    <div key={item} className="flex items-center justify-between rounded-lg px-3 py-2 text-sm transition-colors hover:bg-gray-50">
+                    <motion.div
+                      key={item}
+                      whileHover={{ x: 4 }}
+                      transition={{ type: "spring", stiffness: 300, damping: 25 }}
+                      className="flex items-center justify-between rounded-lg px-3 py-2 text-sm transition-colors hover:bg-gray-50"
+                    >
                       <span className="text-gray-600">{name}</span>
                       <span className="font-[family-name:var(--font-barlow)] font-bold text-[#1a2b3c]">{price}</span>
-                    </div>
+                    </motion.div>
                   );
                 })}
               </div>
@@ -348,29 +326,28 @@ export default function PackDiosaPage() {
         </div>
       </section>
 
-      {/* ═══════════ CTA BANNER ═══════════ */}
-      <section className="relative overflow-hidden bg-[#0f1a24]">
-        <div className="absolute inset-0">
-          <img src="https://images.unsplash.com/photo-1553413077-190dd305871c?w=1600&q=80" alt="" className="h-full w-full object-cover opacity-10" />
-        </div>
-        <div className="relative mx-auto max-w-7xl px-6 py-20 text-center sm:px-8 lg:px-12">
+      {/* CTA BANNER */}
+      <HeroParallax
+        src="https://images.unsplash.com/photo-1553413077-190dd305871c?w=1600&q=80"
+      >
+        <div className="mx-auto max-w-7xl px-6 py-20 text-center sm:px-8 lg:px-12">
           <RevealSection>
             <h2 className="font-[family-name:var(--font-barlow)] text-3xl font-bold text-white sm:text-4xl">Ready to Stock Up?</h2>
-            <p className="mt-4 text-lg text-white/40">Call us, WhatsApp us, or walk into the warehouse. Tue–Fri, 9AM–5PM.</p>
+            <p className="mt-4 text-lg text-white/40">Call us, WhatsApp us, or walk into the warehouse. Tue-Fri, 9AM-5PM.</p>
             <div className="mt-10 flex flex-wrap items-center justify-center gap-4">
-              <Link
+              <MagneticButton
                 href="/pack-diosa/contact"
                 className="group relative overflow-hidden rounded-lg bg-[#c8aa6e] px-10 py-4 font-[family-name:var(--font-barlow)] text-sm font-bold uppercase tracking-wider text-[#0f1a24] transition-shadow duration-300 hover:shadow-lg hover:shadow-[#c8aa6e]/25"
               >
                 <span className="relative z-10">Get a Quote</span>
                 <div className="absolute inset-0 -translate-x-full bg-[#d4ba82] transition-transform duration-300 group-hover:translate-x-0" />
-              </Link>
+              </MagneticButton>
               <a href="tel:+19125550147" className="text-sm text-white/50 transition-colors hover:text-white">(912) 555-0147</a>
               <span className="text-sm text-white/30">561 SW Broad St, Jesup GA</span>
             </div>
           </RevealSection>
         </div>
-      </section>
+      </HeroParallax>
     </div>
   );
 }

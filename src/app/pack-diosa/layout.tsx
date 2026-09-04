@@ -3,6 +3,7 @@ import { Barlow_Condensed, Inter } from "next/font/google";
 import Link from "next/link";
 import PackDiosaNav from "./nav";
 import { WhatsAppButton } from "./components";
+import { SmoothScroll } from "./smooth-scroll";
 
 const barlowCondensed = Barlow_Condensed({
   subsets: ["latin"],
@@ -117,12 +118,14 @@ export default function PackDiosaLayout({
     <div
       className={`${barlowCondensed.variable} ${inter.variable} font-[family-name:var(--font-inter)] antialiased`}
     >
-      <PackDiosaNav links={navLinks} />
+      <SmoothScroll>
+        <PackDiosaNav links={navLinks} />
 
-      <main className="min-h-screen pt-[72px]">{children}</main>
+        <main className="min-h-screen pt-[72px]">{children}</main>
 
-      {/* WhatsApp floating button */}
-      <WhatsAppButton />
+        {/* WhatsApp floating button */}
+        <WhatsAppButton />
+      </SmoothScroll>
 
       {/* Footer */}
       <footer className="bg-[#0f1a24] text-white">
